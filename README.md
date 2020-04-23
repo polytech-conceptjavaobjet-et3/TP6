@@ -343,14 +343,14 @@ Un certain nombre de stratégies de tri devront être anticipées, notamment :
 > 	at et3.java.application.Main.main(Main.java:53)
 > ```
 
-6#5 Implémentez une stratégie de tri par défaut pertinente en typant votre type TextComment avec l'interface java.lang.Comparable<T>  et en implémentant cette interface.
+6#5 Implémentez une stratégie de tri par défaut pertinente en typant votre type TextComment avec l'interface `java.lang.Comparable<T>`  et en implémentant cette interface.
 
-6#5.1 L'interface java.lang.Comparable<T> est un type paramétré. Qu'est-ce que cela apporte dans ce cas précis relativement à l'ancienne définition non paramétrée de cette interface java.lang.Comparable ?
+6#5.1 L'interface `java.lang.Comparable<T>` est un type paramétré. Qu'est-ce que cela apporte dans ce cas précis relativement à l'ancienne définition non paramétrée de cette interface java.lang.Comparable ?
 
 >
 >
 
-6#5.2 Quels sont les avantages et les limitations d'un recours à une définition de la comparaison entre instances interne à une classe telle que permise par l'interface java.lang.Comparable<T> ?
+6#5.2 Quels sont les avantages et les limitations d'un recours à une définition de la comparaison entre instances interne à une classe telle que permise par l'interface `java.lang.Comparable<T>` ?
 
 >
 >
@@ -381,9 +381,12 @@ Un certain nombre de stratégies de tri devront être anticipées, notamment :
 > }
 > ```
 
-6#6 Ajoutez dans votre classe CommentableImmutableText une méthode permettant de réaliser l'affichage détaillé des commentaires (dont l'extrait de texte commenté) et prenant comme paramètre une stratégie de tri de commentaires : displayComments(CommentSortStrategy strategy). En testant sur les valeurs possibles de la stratégie de tri, implémentez initialement le tri avec la stratégie par défaut (reposant sur le tri (déjà) implémenté dans la classe TextComment). Assurez-vous que le choix d'une stratégie définie dans l'énumération CommentSortStrategy mais non implémentée concrètement mènera à la levée d'une exception d'un type approprié. Le tri lui-même pourra être effectué à l'aide de la méthode statique java.util.Collections.sort(List<T> list) .
+6#6 Ajoutez dans votre classe CommentableImmutableText une méthode permettant de réaliser l'affichage détaillé des commentaires (dont l'extrait de texte commenté) et prenant comme paramètre une stratégie de tri de commentaires : `displayComments(CommentSortStrategy strategy)`. En testant sur les valeurs possibles de la stratégie de tri, implémentez initialement le tri avec la stratégie par défaut (reposant sur le tri (déjà) implémenté dans la classe `TextComment`). Assurez-vous que le choix d'une stratégie définie dans l'énumération `CommentSortStrategy` mais non implémentée concrètement mènera à la levée d'une exception d'un type approprié. Le tri lui-même pourra être effectué à l'aide de la méthode statique `java.util.Collections.sort(List<T> list)` .
 
-6#6.1 Quel va être l'effet du recours à la méthode sort(List<T> list)sur la liste transmise en paramètre ? On suppose néanmoins que cela peut être souhaitable ici : pourquoi ?Si l'on ne souhaitait pas cet effet, que faudrait-il faire ?
+6#6.1 Quel va être l'effet du recours à la méthode `sort(List<T> list)` sur la liste transmise en paramètre ? On suppose néanmoins que cela peut être souhaitable ici : pourquoi ? Si l'on ne souhaitait pas cet effet, que faudrait-il faire ?
+
+> 
+> 
 
 6#6.2 code
 
