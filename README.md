@@ -214,10 +214,13 @@ Un certain nombre de stratégies de tri devront être anticipées, notamment :
 > 		@Override
 > 		public String toString() 
 > 		{
-> 			StringBuilder comment = new StringBuilder("Comment : ");
+> 			StringBuilder comment = new StringBuilder();
+> 			
+> 			//We add the piece of text commented
+> 			comment.append("\"" + text.substring(indexBegin, indexEnd) + "\"");
 > 			
 > 			//We add the coordinates of the commented text
-> 			comment.append("[" + indexBegin + "->" + indexEnd + "]");
+> 			comment.append("\n[" + indexBegin + "->" + indexEnd + "]");
 > 			
 > 			//We add the author's name
 > 			comment.append(" Author: " + this.author);
@@ -354,7 +357,28 @@ Un certain nombre de stratégies de tri devront être anticipées, notamment :
 
 6#5.3 code
 
+> On ajoute l'interface `java.lang.Comparable<T>` à la définition de notre classe :
+> 
 > ```Java
+public class TextComment implements Comparable<TextComment>
+> ```
+> 
+> Puis, on implémente la méthode `compareTo(TextComment anotherTextComment)` en choisissant, ici, un tri par ancienneté :
+> 
+> ```Java
+@Override
+		/**
+		 * Compare this 'TextComment' with another one.
+		 * This method will return:
+		 * - 0 if the two 'TextComment' were created at the same time
+		 * - a negative value if this 'TextComment' is older than the other one
+		 * - a positive value if this 'TextComment' is more recent than the other one
+		 */
+		public int compareTo(TextComment anotherTextComment) 
+		{
+			//By default, we compare 'TextComment' instances by seniority
+			return this.creationDate.compareTo(anotherTextComment.creationDate);
+		}
 > ```
 
 6#6 Ajoutez dans votre classe CommentableImmutableText une méthode permettant de réaliser l'affichage détaillé des commentaires (dont l'extrait de texte commenté) et prenant comme paramètre une stratégie de tri de commentaires : displayComments(CommentSortStrategy strategy). En testant sur les valeurs possibles de la stratégie de tri, implémentez initialement le tri avec la stratégie par défaut (reposant sur le tri (déjà) implémenté dans la classe TextComment). Assurez-vous que le choix d'une stratégie définie dans l'énumération CommentSortStrategy mais non implémentée concrètement mènera à la levée d'une exception d'un type approprié. Le tri lui-même pourra être effectué à l'aide de la méthode statique java.util.Collections.sort(List<T> list) .
