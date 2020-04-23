@@ -8,17 +8,15 @@ ___
 
 On souhaite mettre en place un système de commentaires très simple sur un texte statique. Concrètement, un lecteur doit pouvoir ajouter un commentaire libre portant sur un fragment continu d'un document. Les commentaires collectés pourront ensuite être affichés selon différentes stratégies de tri.
 
-Un commentaire pour un texte donné sera donc composé d'un utilisateur, d'un indice de caractère de début et de fin, ainsi que d'une date de création .
+Un commentaire pour un texte donné sera donc composé d'un utilisateur (*user*), d'un indice de caractère de début (*indexBegin*) et de fin (*indexEnd*), ainsi que d'une date de création (*creationDate*).
 
 Un certain nombre de stratégies de tri devront être anticipées, notamment :
+- afficher les commentaires par ancienneté 
+- afficher les commentaires par position de début dans le texte (en privilégiant les commentaires se terminant d'abord)
+- afficher les commentaires par nom d'utilisateur (tri alphanumérique) puis par ancienneté
+- afficher les commentaires par longueur de texte décroissante
 
-	- afficher les commentaires par ancienneté
-	- afficher les commentaires par position de début dans le texte (en privilégiant les commentaires se terminant d'abord)
-	- afficher les commentaires par nom d'utilisateur (tri alphanumérique) puis par ancienneté
-	- afficher les commentaires par longueur de texte décroissante
-
-
-6#1. Proposez une classe d'énumération pour représenter les stratégies de tri des commentaires . Chaque valeur d'énumération sera associée à une brève description textuelle qui sera affichée lorsqu'un tri sera réalisé.
+6#1. Proposez une classe d'énumération `CommentSortingStrategy` pour représenter les stratégies de tri des commentaires. Chaque valeur d'énumération sera associée à une brève description textuelle qui sera affichée lorsqu'un tri sera réalisé.
 
 6#1.1 code
 
