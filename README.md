@@ -371,13 +371,13 @@ Un certain nombre de stratégies de tri devront être anticipées, notamment :
 >  * Compare this 'TextComment' with another one.
 >  * This method will return:
 >  * - 0 if the two 'TextComment' were created at the same time
->  * - a negative value if this 'TextComment' is older than the other one
->  * - a positive value if this 'TextComment' is more recent than the other one
+>  * - a positive value if this 'TextComment' is older than the other one
+>  * - a negative value if this 'TextComment' is more recent than the other one
 >  */
 > public int compareTo(TextComment anotherTextComment) 
 > {
 > 	//By default, we compare 'TextComment' instances by seniority
-> 	return this.creationDate.compareTo(anotherTextComment.creationDate);
+> 	return - this.creationDate.compareTo(anotherTextComment.creationDate);
 > }
 > ```
 
@@ -478,11 +478,11 @@ Un certain nombre de stratégies de tri devront être anticipées, notamment :
 > 
 > Elements are sorted from the most recent to the oldest.
 > 
-> "ipsu"
-> [6->10] Charles (Fri Apr 24 10:14:28 CEST 2020)
-> 
 > " elit. Ut tincidunt "
 > [50->70] Damien (Fri Apr 24 10:14:28 CEST 2020)
+>
+> "ipsu"
+> [6->10] Charles (Fri Apr 24 10:14:28 CEST 2020)
 > 
 > et3.java.exceptions.SortingStrategyNotImplementedException: The position sorting strategy hax not been implemented yet. Comments cannot be displayed.
 > 	at et3.java.commentable.CommentableImmutableText.displaySortedComments(CommentableImmutableText.java:158)
@@ -507,6 +507,145 @@ Un certain nombre de stratégies de tri devront être anticipées, notamment :
 6#7.2 code
 
 > ```Java
+> /**
+>  * This methods displays the comments linked to the text after having sorted them
+>  * @param sortingStrategy The sorting strategy
+>  * @throws SortingStrategyNotImplementedException 
+>  */
+> public void displaySortedComments(CommentSortingStrategy commentSortStrategy) throws SortingStrategyNotImplementedException
+> {
+> 	//If we want to sort comments by seniority
+> 	if(commentSortStrategy.equals(CommentSortingStrategy.BySeniority))
+> 	{
+> 		System.out.println(CommentSortingStrategy.BySeniority.getDescription() + "\n");
+> 		
+> 		comments.sort(new Comparator<TextComment>() 
+> 		{
+> 			@Override
+> 			public int compare(TextComment textComment1, TextComment textComment2) 
+> 			{
+> 				//- 0 if textComment1 and textComment2 were created at the same time
+> 				//	-> textComment1 and textComment2 will be placed indifferently
+> 				//- a negative value if textComment1 is more recent than textComment2
+> 				//	-> textComment1 will be placed before textComment2
+> 				//- a positive value if textComment1 is older than textComment2 
+> 				//	-> textComment1 will be placed after textComment2
+> 				return - textComment1.creationDate.compareTo(textComment2.creationDate);
+> 			}
+> 		});
+> 		
+> 		displayComments();
+> 	}
+> 	//If we want to sort comments by position in the linked text
+> 	if(commentSortStrategy.equals(CommentSortingStrategy.ByPosition))
+> 	{
+> 		System.out.println(CommentSortingStrategy.ByPosition.getDescription() + "\n");
+> 		
+> 		comments.sort(new Comparator<TextComment>() 
+> 		{
+> 			@Override
+> 			public int compare(TextComment textComment1, TextComment textComment2) 
+> 			{
+> 				//If textComment1 end before textComment2
+> 				if(textComment1.indexEnd < textComment2.indexEnd)
+> 				{
+> 					//textComment1 will be placed before textComment2
+> 					return -1;
+> 				}
+> 				//If textComment2 end before textComment1
+> 				else if(textComment2.indexEnd < textComment1.indexEnd)
+> 				{
+> 					//textComment1 will be placed after textComment2
+> 					return 1;
+> 				}
+> 				//If textComment1 and textComment2 end at the same index
+> 				else
+> 				{
+> 					//textComment1 and textComment2 will be placed indifferently
+> 					return 0;
+> 				}
+> 			}
+> 		});
+> 		
+> 		displayComments();
+> 	}
+> 	//If we want to sort comments by name and seniority
+> 	if(commentSortStrategy.equals(CommentSortingStrategy.ByNameAndSeniority))
+> 	{
+> 		System.out.println(CommentSortingStrategy.ByNameAndSeniority.getDescription() + "\n");
+> 		
+> 		comments.sort(new Comparator<TextComment>() 
+> 		{
+> 			@Override
+> 			public int compare(TextComment textComment1, TextComment textComment2) 
+> 			{
+> 				//- 0 if textComment1 and textComment2 were created by the same author
+> 				//- a negative value if the author of textComment1 is lexicographically greater than the author of textComment2
+> 				//- a positive value if the author of textComment1 is lexicographically lower than the author of textComment2
+> 				int authorComparison = textComment1.author.compareTo(textComment2.author);
+> 				
+> 				if(authorComparison == 0)
+> 				{
+> 					//- 0 if textComment1 and textComment2 were created at the same time
+> 					//	-> textComment1 and textComment2 will be placed indifferently
+> 					//- a negative value if textComment1 is more recent than textComment2
+> 					//	-> textComment1 will be placed before textComment2
+> 					//- a positive value if textComment1 is older than textComment2 
+> 					//	-> textComment1 will be placed after textComment2
+> 					return - textComment1.creationDate.compareTo(textComment2.creationDate);
+> 				}
+> 				else
+> 				{
+> 					//- 0
+> 					//	-> textComment1 and textComment2 will be placed indifferently
+> 					//- a negative value
+> 					// 	-> textComment1 will be placed before textComment2
+> 					//- a positive value
+> 					// 	-> textComment1 will be placed after textComment2
+> 					return authorComparison;
+> 				}
+> 			}
+> 		});
+> 		
+> 		displayComments();
+> 	}
+> 	//If we want to sort comments by decreasing length
+> 	if(commentSortStrategy.equals(CommentSortingStrategy.ByLength))
+> 	{
+> 		System.out.println(CommentSortingStrategy.ByLength.getDescription() + "\n");
+> 		
+> 		comments.sort(new Comparator<TextComment>() 
+> 		{
+> 			@Override
+> 			public int compare(TextComment textComment1, TextComment textComment2) 
+> 			{
+> 				int length1 = textComment1.indexEnd - textComment1.indexBegin;
+> 				int length2 = textComment2.indexEnd - textComment2.indexBegin;
+> 				
+> 				//If textComment1 comments a larger text than textComment2
+> 				if(length1 > length2)
+> 				{
+> 					//textComment1 will be placed after textComment2
+> 					return 1;
+> 				}
+> 				//If textComment1 comments a shorter text than textComment2
+> 				else if(length2 > length1)
+> 				{
+> 					//textComment1 will be placed before textComment2
+> 					return -1;
+> 				}
+> 				//If textComment1 and textComment2 comment the same length of text
+> 				else
+> 				{
+> 					//textComment1 and textComment2 will be placed indifferently
+> 					return 0;
+> 				}
+> 			}
+> 		});
+> 		
+> 		displayComments();
+> 	}
+> }
 > ```
 
 6#8. Testez votre programme sur un jeu de données et pour différentes stratégies de tri des commentaires.
@@ -514,6 +653,149 @@ Un certain nombre de stratégies de tri devront être anticipées, notamment :
 6#8.1 trace d'exécution
 
 > ```
+> //6#7.2
+> System.out.println("\n Question 6#7.2 \n");
+> try 
+> {
+> 	commentableText.addComment("Felicie", 108, 251);
+> 	System.out.println("The Felicie's comment has been added to the text.");
+> } 
+> catch (TextCommentException exception) 
+> {
+> 	exception.printStackTrace();
+> }
+> System.out.println();
+> try 
+> {
+> 	commentableText.addComment("Emma", 0, 4);
+> 	System.out.println("The Emma's comment has been added to the text.");
+> } 
+> catch (TextCommentException exception) 
+> {
+> 	exception.printStackTrace();
+> }
+> System.out.println();
+> try 
+> {
+> 	commentableText.addComment("Charles", 108, 251);
+> 	System.out.println("The Charles' comment has been added to the text.");
+> } 
+> catch (TextCommentException exception) 
+> {
+> 	exception.printStackTrace();
+> }
+> System.out.println();
+> try 
+> {
+> 	commentableText.displaySortedComments(CommentSortingStrategy.BySeniority);
+> } 
+> catch (SortingStrategyNotImplementedException exception) 
+> {
+> 	exception.printStackTrace();
+> }
+> try 
+> {
+> 	commentableText.displaySortedComments(CommentSortingStrategy.ByPosition);
+> } 
+> catch (SortingStrategyNotImplementedException exception) 
+> {
+> 	exception.printStackTrace();
+> }
+> try 
+> {
+> 	commentableText.displaySortedComments(CommentSortingStrategy.ByNameAndSeniority);
+> } 
+> catch (SortingStrategyNotImplementedException exception) 
+> {
+> 	exception.printStackTrace();
+> }
+> try 
+> {
+> 	commentableText.displaySortedComments(CommentSortingStrategy.ByLength);
+> } 
+> catch (SortingStrategyNotImplementedException exception) 
+> {
+> 	exception.printStackTrace();
+> }
+> ```
+> 
+> ```
+> 
+>  Question 6#7.2 
+> 
+> The Felicie's comment has been added to the text.
+> 
+> The Emma's comment has been added to the text.
+> 
+> The Charles' comment has been added to the text.
+> 
+> Elements are sorted from the most recent to the oldest.
+> 
+> "ce rutrum nisi eget risus gravida, ut posuere eros tempus. Cras ut nibh sit amet neque rhoncus dapibus. Praesent in semper justo, non ornare qu"
+> [108->251] Felicie (Fri Apr 24 11:59:02 CEST 2020)
+> 
+> "Lore"
+> [0->4] Emma (Fri Apr 24 11:59:02 CEST 2020)
+> 
+> "ce rutrum nisi eget risus gravida, ut posuere eros tempus. Cras ut nibh sit amet neque rhoncus dapibus. Praesent in semper justo, non ornare qu"
+> [108->251] Charles (Fri Apr 24 11:59:02 CEST 2020)
+> 
+> "ipsu"
+> [6->10] Charles (Fri Apr 24 11:59:01 CEST 2020)
+> 
+> " elit. Ut tincidunt "
+> [50->70] Damien (Fri Apr 24 11:59:01 CEST 2020)
+> 
+> Elements are sorted from the closest to the begining to the closest to the end.
+> 
+> "Lore"
+> [0->4] Emma (Fri Apr 24 11:59:02 CEST 2020)
+> 
+> "ipsu"
+> [6->10] Charles (Fri Apr 24 11:59:01 CEST 2020)
+> 
+> " elit. Ut tincidunt "
+> [50->70] Damien (Fri Apr 24 11:59:01 CEST 2020)
+> 
+> "ce rutrum nisi eget risus gravida, ut posuere eros tempus. Cras ut nibh sit amet neque rhoncus dapibus. Praesent in semper justo, non ornare qu"
+> [108->251] Felicie (Fri Apr 24 11:59:02 CEST 2020)
+> 
+> "ce rutrum nisi eget risus gravida, ut posuere eros tempus. Cras ut nibh sit amet neque rhoncus dapibus. Praesent in semper justo, non ornare qu"
+> [108->251] Charles (Fri Apr 24 11:59:02 CEST 2020)
+> 
+> Elements are sorted by users' alphabetical order and senority, from the most recent to the oldest.
+> 
+> "ce rutrum nisi eget risus gravida, ut posuere eros tempus. Cras ut nibh sit amet neque rhoncus dapibus. Praesent in semper justo, non ornare qu"
+> [108->251] Charles (Fri Apr 24 11:59:02 CEST 2020)
+> 
+> "ipsu"
+> [6->10] Charles (Fri Apr 24 11:59:01 CEST 2020)
+> 
+> " elit. Ut tincidunt "
+> [50->70] Damien (Fri Apr 24 11:59:01 CEST 2020)
+> 
+> "Lore"
+> [0->4] Emma (Fri Apr 24 11:59:02 CEST 2020)
+> 
+> "ce rutrum nisi eget risus gravida, ut posuere eros tempus. Cras ut nibh sit amet neque rhoncus dapibus. Praesent in semper justo, non ornare qu"
+> [108->251] Felicie (Fri Apr 24 11:59:02 CEST 2020)
+> 
+> Elements are sorted by decreasing length.
+> 
+> "ipsu"
+> [6->10] Charles (Fri Apr 24 11:59:01 CEST 2020)
+> 
+> "Lore"
+> [0->4] Emma (Fri Apr 24 11:59:02 CEST 2020)
+> 
+> " elit. Ut tincidunt "
+> [50->70] Damien (Fri Apr 24 11:59:01 CEST 2020)
+> 
+> "ce rutrum nisi eget risus gravida, ut posuere eros tempus. Cras ut nibh sit amet neque rhoncus dapibus. Praesent in semper justo, non ornare qu"
+> [108->251] Charles (Fri Apr 24 11:59:02 CEST 2020)
+> 
+> "ce rutrum nisi eget risus gravida, ut posuere eros tempus. Cras ut nibh sit amet neque rhoncus dapibus. Praesent in semper justo, non ornare qu"
+> [108->251] Felicie (Fri Apr 24 11:59:02 CEST 2020)
 > ```
 
 6#9 On s'intéresse à présent à déterminer la popularité des fragments de texte commentés par les lecteurs. Pour cela, on considérera un fragment de texte comme d'autant plus populaire qu'il a été sélectionné exactement  de nombreuses fois dans des commentaires. Proposez une solution simple  via une méthode de votre classe CommentableImmutableText permettant d'afficher les fragments commentés du texte par popularité décroissante.
