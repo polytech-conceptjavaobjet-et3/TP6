@@ -850,7 +850,7 @@ Un certain nombre de stratégies de tri devront être anticipées, notamment :
 
 6#9.1 code
 
-> Nous allons classifier les portions de texte commentées dans une [Map]{https://docs.oracle.com/javase/8/docs/api/java/util/Map.html} afin de pouvoir itérer sur leur nombre de commentaire :
+> Nous allons classifier les portions de texte commentées dans une [Map](https://docs.oracle.com/javase/8/docs/api/java/util/Map.html) afin de pouvoir itérer sur leur nombre de commentaire :
 > 
 > ```Java
 > /**
