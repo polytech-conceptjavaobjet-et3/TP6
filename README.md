@@ -652,7 +652,9 @@ Un certain nombre de stratégies de tri devront être anticipées, notamment :
 
 6#8.1 trace d'exécution
 
-> ```
+> Afin de tester les différentes stratégies de tri, nous commençons par ajouter quelques nouveaux commentaires pertinents pour le test et nous essayons chaque tri séparemment dans le `main(String[] args)` :
+> 
+> ```Java
 > //6#7.2
 > System.out.println("\n Question 6#7.2 \n");
 > try 
@@ -718,6 +720,8 @@ Un certain nombre de stratégies de tri devront être anticipées, notamment :
 > 	exception.printStackTrace();
 > }
 > ```
+> 
+> A l'éxécution, on obtient les traces suivantes :
 > 
 > ```
 > 
@@ -802,10 +806,87 @@ Un certain nombre de stratégies de tri devront être anticipées, notamment :
 
 6#9.1 code
 
+> Nous allons classifier les portions de texte commentées dans une [Map]{https://docs.oracle.com/javase/8/docs/api/java/util/Map.html} afin de pouvoir itérer sur leur nombre de commentaire :
+> 
 > ```Java
+> /**
+>  * This method displays the pieces of text that are commented from the most commented to the less commented
+>  */
+> public void displayCommentedTextByPopularity()
+> {
+> 	//We create a map containing the commented texts and their number of comments
+> 	Map<String, Integer> commentedTexts = new HashMap<>();
+> 	
+> 	//For each comment
+> 	for(TextComment comment : comments)
+> 	{
+> 		String commentedText = this.text.substring(comment.indexBegin, comment.indexEnd);
+> 		
+> 		//If the commented text has already been added to the map
+> 		if(commentedTexts.containsKey(commentedText))
+> 		{
+> 			//We increment its value
+> 			int previousCount = commentedTexts.get(commentedText);
+> 			commentedTexts.replace(commentedText, previousCount + 1);
+> 		}
+> 		//If the commented text has not already been added to the map
+> 		else
+> 		{
+> 			//We add it to the map with a value of 1
+> 			commentedTexts.put(commentedText, 1);
+> 		}
+> 	}
+> 	
+> 	//We sort the map entries in a list
+> 	List<Entry<String, Integer>> commentedTextsList = new ArrayList<>(commentedTexts.entrySet());
+> 	commentedTextsList.sort(new Comparator<Entry<String, Integer>>() {
+> > 		@Override
+> 		public int compare(Entry<String, Integer> entry1, Entry<String, Integer> entry2)
+> 		{
+> 			//if the value of entry1 is greater than the value of entry2
+> 			if(entry1.getValue() > entry2.getValue())
+> 			{
+> 				//entry1 will be placed before entry2
+> 				return -1;
+> 			}
+> 			//if the value of entry1 is lower than the value of entry2
+> 			if(entry1.getValue() < entry2.getValue())
+> 			{
+> 				//entry1 will be placed after entry2
+> 				return 1;
+> 			}
+> 			//if entry1 and entry2 have the same value
+> 			else
+> 			{
+> 				//entry1 and entry2 will be placed indifferently
+> 				return 0;
+> 			}
+> 		}
+> 	});
+> 	
+> 	//We display the commented texts
+> 	for(Entry<String, Integer> entry : commentedTextsList)
+> 	{
+> 		System.out.println("\"" + entry.getKey() + "\" was commented " + entry.getValue() + " time(s).");
+> 	}
+> }
 > ```
 
 6#9.2 trace d'exécution
 
+> On ajoute les lignes suivantes à notre `main(String[] args)` :
+>
+> ```Java
+> //6#9.2
+> System.out.println("\n Question 6#9.2 \n");
+> commentableText.displayCommentedTextByPopularity();
 > ```
+> 
+> On obtient les traces suivantes lors de l'éxécution :
+> 
+> ```
+> "ce rutrum nisi eget risus gravida, ut posuere eros tempus. Cras ut nibh sit amet neque rhoncus dapibus. Praesent in semper justo, non ornare qu" was commented 2 time(s).
+> " elit. Ut tincidunt " was commented 1 time(s).
+> "Lore" was commented 1 time(s).
+> "ipsu" was commented 1 time(s).
 > ```
