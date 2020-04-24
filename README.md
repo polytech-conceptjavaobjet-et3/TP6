@@ -390,28 +390,29 @@ Un certain nombre de stratégies de tri devront être anticipées, notamment :
 6#6.2 code
 
 > On crée une nouvelle méthode permettant l'affichage de la liste de commentaire : `displayComments()`, et une nouvelle méthode permettant l'affichage de cette liste après un tri effectué selon une de nos stratégies.
-> Pour implémenter cette dernière, nous allons passer par la création de classes anonymes pour les comparateurs des différentes stratégies de tri.
-> Pour redéfinir un comparateur, nous allons donc utiliser la syntaxe suivante : 
->
-> ```Java
-> Comparator<TextComment> monComparateurDeCommentaires = new Comparator<TextComment>() 
-> {
-> 	@Override
-> 	public int compare(TextComment textComment1, TextComment textComment2) 
->  	{
-> 		// TODO Auto-generated method stub
-> 		return 0;
-> 	}
-> };
-> ```
 >
 > Pour gérer les exceptions liées à la non-implémentation des startégies de tri, on crée une nouvelle classe d'exception, qui sera utilisée lors des tests dans la méthode `displaySortedComments(CommentSortingStrategy commentSortStrategy)` :
 >
 > ```Java
->
+> package et3.java.exceptions;
+> 
+> public class SortingStrategyNotImplementedException extends Exception
+> {
+> 	private static final long serialVersionUID = 1L;
+> 
+> 	public SortingStrategyNotImplementedException() 
+> 	{
+> 		super();
+> 	}
+> 	
+> 	public SortingStrategyNotImplementedException(String message)
+> 	{
+> 		super(message);
+> 	}
+> }
 > ```
 > 
-> Ce qui va nous donner, lors de l'implémentation de la méthode `displaySortedComments(CommentSortingStrategy commentSortStrategy)` :
+> Nous aurons donc, lors de l'implémentation de la méthode `displaySortedComments(CommentSortingStrategy commentSortStrategy)` :
 > 
 > ```Java
 > /**
@@ -457,6 +458,7 @@ Un certain nombre de stratégies de tri devront être anticipées, notamment :
 > }
 > ```
 > 
+> Pour tester cette méthode, nous allons rajouter quelques lignes de test dans notre `main(String[] args)`, en prennant soin de séparer chaque ligne de code à tester pour plus de lisibilité :
 > 
 > ```Java
 > //6#6.2
@@ -497,6 +499,8 @@ Un certain nombre de stratégies de tri devront être anticipées, notamment :
 > }
 > ```
 > 
+> Ce qui nous donnera les traces d'éxécution suivantes :
+> 
 > ```
 >  Question 6#6.2 
 > 
@@ -525,11 +529,27 @@ Un certain nombre de stratégies de tri devront être anticipées, notamment :
 
 6#7.1 Pourquoi le recours à la définition d'une classe anonyme implémentant java.util.Comparator<E> peut-il être approprié ici ? Quelle pourrait être une alternative à l'utilisation d'une classe anonyme, pour quels avantages et inconvénients ?
 
->
->
+> Les classes anonymes sont utiles lorsqu'on veux implémenter une classe qui a vocation à n'avoir qu'une instance.  créer une classe explicitement pour chacun d'entre eux serait absurde et trop lourd, puisque chacun d'entre eux ne sert qu'une fois.
 
 6#7.2 code
 
+> Nous allons passer par la création de classes anonymes pour les comparateurs des différentes stratégies de tri.
+> Pour définir un comparateur, nous allons donc utiliser la syntaxe suivante : 
+>
+> ```Java
+> Comparator<TextComment> monComparateurDeCommentaires = new Comparator<TextComment>() 
+> {
+> 	@Override
+> 	public int compare(TextComment textComment1, TextComment textComment2) 
+>  	{
+> 		// TODO Auto-generated method stub
+> 		return 0;
+> 	}
+> };
+> ```
+> 
+> Chaque comparateur sera donc créé de cette façon et implémentera la méthode `compare(TextComment textComment1, TextComment textComment2)` en fonction de la stratégie choisie :
+> 
 > ```Java
 > /**
 >  * This methods displays the comments linked to the text after having sorted them
