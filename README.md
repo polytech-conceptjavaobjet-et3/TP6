@@ -391,6 +391,110 @@ Un certain nombre de stratégies de tri devront être anticipées, notamment :
 6#6.2 code
 
 > ```Java
+> /**
+>  * This methods displays the comments linked to the text
+>  */
+> public void displayComments()
+> {
+> 	for(TextComment comment : comments)
+> 	{
+> 		System.out.println(comment + "\n");
+> 	}
+> }
+> 
+> /**
+>  * This methods displays the comments linked to the text after having sorted them
+>  * @param sortingStrategy The sorting strategy
+>  * @throws SortingStrategyNotImplementedException 
+>  */
+> public void displaySortedComments(CommentSortingStrategy commentSortStrategy) throws SortingStrategyNotImplementedException
+> {
+> 	//If we want to sort comments by seniority
+> 	if(commentSortStrategy.equals(CommentSortingStrategy.BySeniority))
+> 	{
+> 		System.out.println(CommentSortingStrategy.BySeniority.getDescription() + "\n");
+> 		comments.sort(null);
+> 		displayComments();
+> 	}
+> 	//If we want to sort comments by position in the linked text
+> 	if(commentSortStrategy.equals(CommentSortingStrategy.ByPosition))
+> 	{
+> 		throw new SortingStrategyNotImplementedException("The position sorting strategy hax not been implemented yet. Comments cannot be displayed.");
+> 	}
+> 	//If we want to sort comments by name and seniority
+> 	if(commentSortStrategy.equals(CommentSortingStrategy.ByNameAndSeniority))
+> 	{
+> 		throw new SortingStrategyNotImplementedException("The name and seniority sorting strategy hax not been implemented yet. Comments cannot be displayed.");
+> 	}
+> 	//If we want to sort comments by decreasing length
+> 	if(commentSortStrategy.equals(CommentSortingStrategy.ByLength))
+> 	{
+> 		throw new SortingStrategyNotImplementedException("The length sorting strategy hax not been implemented yet. Comments cannot be displayed.");
+> 	}
+> }
+> ```
+> 
+> ```Java
+> //6#6.2
+> System.out.println("\n Question 6#6.2 \n");
+> try 
+> {
+> 	commentableText.displaySortedComments(CommentSortingStrategy.BySeniority);
+> } 
+> catch (SortingStrategyNotImplementedException exception) 
+> {
+> 	exception.printStackTrace();
+> }
+> try 
+> {
+> 	commentableText.displaySortedComments(CommentSortingStrategy.ByPosition);
+> } 
+> catch (SortingStrategyNotImplementedException exception) 
+> {
+> 	exception.printStackTrace();
+> }
+> System.out.println();
+> try 
+> {
+> 	commentableText.displaySortedComments(CommentSortingStrategy.ByNameAndSeniority);
+> } 
+> catch (SortingStrategyNotImplementedException exception) 
+> {
+> 	exception.printStackTrace();
+> }
+> System.out.println();
+> try 
+> {
+> 	commentableText.displaySortedComments(CommentSortingStrategy.ByLength);
+> } 
+> catch (SortingStrategyNotImplementedException exception) 
+> {
+> 	exception.printStackTrace();
+> }
+> ```
+> 
+> ```
+>  Question 6#6.2 
+> 
+> Elements are sorted from the most recent to the oldest.
+> 
+> "ipsu"
+> [6->10] Charles (Fri Apr 24 10:14:28 CEST 2020)
+> 
+> " elit. Ut tincidunt "
+> [50->70] Damien (Fri Apr 24 10:14:28 CEST 2020)
+> 
+> et3.java.exceptions.SortingStrategyNotImplementedException: The position sorting strategy hax not been implemented yet. Comments cannot be displayed.
+> 	at et3.java.commentable.CommentableImmutableText.displaySortedComments(CommentableImmutableText.java:158)
+> 	at et3.java.application.Main.main(Main.java:87)
+> 
+> et3.java.exceptions.SortingStrategyNotImplementedException: The name and seniority sorting strategy hax not been implemented yet. Comments cannot be displayed.
+> 	at et3.java.commentable.CommentableImmutableText.displaySortedComments(CommentableImmutableText.java:163)
+> 	at et3.java.application.Main.main(Main.java:96)
+> 
+> et3.java.exceptions.SortingStrategyNotImplementedException: The length sorting strategy hax not been implemented yet. Comments cannot be displayed.
+> 	at et3.java.commentable.CommentableImmutableText.displaySortedComments(CommentableImmutableText.java:168)
+> 	at et3.java.application.Main.main(Main.java:105)
 > ```
 
 6#7 Implémentez à présent l'ensemble des autres stratégies de tri de commentaires prévues. Pour cela, enrichissez la méthode displayComments en associant chaque valeur de CommentSortStrategy à la définition d'une classe anonyme implémentant java.util.Comparator<E> , et en ayant désormais recours pour le tri lui-même à la méthode statique java.util.Collections.sort(List<T> list, Comparator<? super T> comparator) .
