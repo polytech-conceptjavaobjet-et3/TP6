@@ -343,17 +343,17 @@ Un certain nombre de stratégies de tri devront être anticipées, notamment :
 > 	at et3.java.application.Main.main(Main.java:53)
 > ```
 
-6#5 Implémentez une stratégie de tri par défaut pertinente en typant votre type TextComment avec l'interface `java.lang.Comparable<T>`  et en implémentant cette interface.
+6#5 Implémentez une stratégie de tri par défaut pertinente en typant votre type TextComment avec l'interface [`java.lang.Comparable<T>`](https://docs.oracle.com/javase/8/docs/api/java/lang/Comparable.html) et en implémentant cette interface.
 
 6#5.1 L'interface `java.lang.Comparable<T>` est un type paramétré. Qu'est-ce que cela apporte dans ce cas précis relativement à l'ancienne définition non paramétrée de cette interface java.lang.Comparable ?
 
->
->
+> ?
+> ?
 
 6#5.2 Quels sont les avantages et les limitations d'un recours à une définition de la comparaison entre instances interne à une classe telle que permise par l'interface `java.lang.Comparable<T>` ?
 
->
->
+> L'avantage d'implémenter cette interface est l'accès aux méthodes et aux attributs de la classe `TextComment`. En effet, l'implémentation de la méthode `compareTo(T o)` se faisant à l'intérieur de la classe `TextComment`, celle-ci peut avoir accès à la classe tout entière, y compris les éléments `private`.
+> En revanche, l'interface n'ayant qu'une méthode `compareTo(T o)`, elle ne permet pas de suivre plusieurs stratégies de tri, comme c'est le cas pour ce TP.
 
 6#5.3 code
 
@@ -381,15 +381,38 @@ Un certain nombre de stratégies de tri devront être anticipées, notamment :
 > }
 > ```
 
-6#6 Ajoutez dans votre classe CommentableImmutableText une méthode permettant de réaliser l'affichage détaillé des commentaires (dont l'extrait de texte commenté) et prenant comme paramètre une stratégie de tri de commentaires : `displayComments(CommentSortStrategy strategy)`. En testant sur les valeurs possibles de la stratégie de tri, implémentez initialement le tri avec la stratégie par défaut (reposant sur le tri (déjà) implémenté dans la classe `TextComment`). Assurez-vous que le choix d'une stratégie définie dans l'énumération `CommentSortStrategy` mais non implémentée concrètement mènera à la levée d'une exception d'un type approprié. Le tri lui-même pourra être effectué à l'aide de la méthode statique `java.util.Collections.sort(List<T> list)` .
+6#6 Ajoutez dans votre classe CommentableImmutableText une méthode permettant de réaliser l'affichage détaillé des commentaires (dont l'extrait de texte commenté) et prenant comme paramètre une stratégie de tri de commentaires : `displaySortedComments(CommentSortingStrategy commentSortStrategy)`. En testant sur les valeurs possibles de la stratégie de tri, implémentez initialement le tri avec la stratégie par défaut (reposant sur le tri (déjà) implémenté dans la classe `TextComment`). Assurez-vous que le choix d'une stratégie définie dans l'énumération `CommentSortingStrategy` mais non implémentée concrètement mènera à la levée d'une exception d'un type approprié. Le tri lui-même pourra être effectué à l'aide de la méthode statique [`java.util.Collections.sort(List<T> list)`](https://docs.oracle.com/javase/7/docs/api/java/util/Collections.html#sort(java.util.List,%20java.util.Comparator)).
 
 6#6.1 Quel va être l'effet du recours à la méthode `sort(List<T> list)` sur la liste transmise en paramètre ? On suppose néanmoins que cela peut être souhaitable ici : pourquoi ? Si l'on ne souhaitait pas cet effet, que faudrait-il faire ?
 
-> 
-> 
+> La méthode `sort(List<T> list)` fait directement appel à la méthode `compareTo(T o)` implémentée ci-dessus. Elle va modifier l'ordre des éléments de la liste donnée en paramètre selon la comparaison définie dans `compareTo(T o)`. Dans cet exemple, les commentaires seront alors triés par ancienneté.
 
 6#6.2 code
 
+> On crée une nouvelle méthode permettant l'affichage de la liste de commentaire : `displayComments()`, et une nouvelle méthode permettant l'affichage de cette liste après un tri effectué selon une de nos stratégies.
+> Pour implémenter cette dernière, nous allons passer par la création de classes anonymes pour les comparateurs des différentes stratégies de tri.
+> Pour redéfinir un comparateur, nous allons donc utiliser la syntaxe suivante : 
+>
+> ```Java
+> Comparator<TextComment> monComparateurDeCommentaires = new Comparator<TextComment>() 
+> {
+> 	@Override
+> 	public int compare(TextComment textComment1, TextComment textComment2) 
+>  	{
+> 		// TODO Auto-generated method stub
+> 		return 0;
+> 	}
+> };
+> ```
+>
+> Pour gérer les exceptions liées à la non-implémentation des startégies de tri, on crée une nouvelle classe d'exception, qui sera utilisée lors des tests dans la méthode `displaySortedComments(CommentSortingStrategy commentSortStrategy)` :
+>
+> ```Java
+>
+> ```
+> 
+> Ce qui va nous donner, lors de l'implémentation de la méthode `displaySortedComments(CommentSortingStrategy commentSortStrategy)` :
+> 
 > ```Java
 > /**
 >  * This methods displays the comments linked to the text
@@ -433,6 +456,7 @@ Un certain nombre de stratégies de tri devront être anticipées, notamment :
 > 	}
 > }
 > ```
+> 
 > 
 > ```Java
 > //6#6.2
@@ -840,7 +864,7 @@ Un certain nombre de stratégies de tri devront être anticipées, notamment :
 > 	//We sort the map entries in a list
 > 	List<Entry<String, Integer>> commentedTextsList = new ArrayList<>(commentedTexts.entrySet());
 > 	commentedTextsList.sort(new Comparator<Entry<String, Integer>>() {
-> > 		@Override
+>  		@Override
 > 		public int compare(Entry<String, Integer> entry1, Entry<String, Integer> entry2)
 > 		{
 > 			//if the value of entry1 is greater than the value of entry2
