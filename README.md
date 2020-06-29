@@ -347,8 +347,7 @@ Un certain nombre de stratégies de tri devront être anticipées, notamment :
 
 6#5.1 L'interface `java.lang.Comparable<T>` est un type paramétré. Qu'est-ce que cela apporte dans ce cas précis relativement à l'ancienne définition non paramétrée de cette interface java.lang.Comparable ?
 
-> ?
-> ?
+> 
 
 6#5.2 Quels sont les avantages et les limitations d'un recours à une définition de la comparaison entre instances interne à une classe telle que permise par l'interface `java.lang.Comparable<T>` ?
 
